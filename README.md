@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SOLSTICE — Halo One
 
-## Getting Started
+**Mockup 2** in the client-demos series (sibling of `pelagic/`): a single-page
+product site with a **true WebGL 3D scene** — a levitating sculptural lamp you
+can drag to orbit, whose choreography (exploded view, colour-temperature sweep)
+is driven by scroll.
 
-First, run the development server:
+Deliberately the opposite of Pelagic's dark abyss: warm porcelain/copper
+palette, light theme, and the classic "contemporary luxury" type pairing —
+Playfair Display headlines over Inter body, DM Mono for labels.
+
+## Stack (latest versions from npmjs.com at build time, 2026-07-14)
+
+| Library | Version | Role |
+|---|---|---|
+| next | 16.2.10 | App Router, TypeScript, Turbopack |
+| react / react-dom | 19.2.x | UI runtime |
+| tailwindcss | 4.x | Styling (`@theme` tokens in `globals.css`) |
+| three | 0.185.1 | WebGL |
+| @react-three/fiber | 9.6.1 | React renderer for three.js |
+| @react-three/drei | 10.7.7 | Float, MeshTransmissionMaterial, Environment/Lightformer, ContactShadows, Sparkles, PresentationControls |
+| motion | 12.42.2 | DOM reveal animations (`motion/react`) |
+
+Fonts (next/font/google): Playfair Display · Inter · DM Mono.
+| lenis | 1.3.25 | Smooth scroll + scroll progress feed |
+
+## Run
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev   # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## How the 3D works
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `src/components/three/Scene.tsx` — fixed full-viewport `<Canvas>` behind the
+  DOM. Procedural studio lighting via `<Environment>` + `<Lightformer>` (no
+  runtime HDR downloads). `PresentationControls` gives drag-to-orbit.
+- `src/components/three/HaloOne.tsx` — the product, built entirely from
+  primitives: transmission-glass orb, emissive filament core, three copper
+  torus halos, walnut maglev base. A `useFrame` loop reads scroll progress and
+  drives position/exploded-view/colour-temperature through keyframe tracks.
+- `src/lib/scroll.ts` — mutable scroll store written by Lenis, read at 60 fps
+  by the render loop (no React re-renders), plus the `track()` keyframe helper.
+- DOM sections scroll over the canvas with `pointer-events: none` (links opt
+  back in), so drags fall through to the 3D scene.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Scroll choreography: hero (assembled, right) → craft (drifts left, halos fly
+apart) → modes (reassembles, filament sweeps 2,200 K → 5,600 K) → specs
+(shrinks behind frosted plate) → coda (returns, ember glow).

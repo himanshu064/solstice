@@ -1,26 +1,58 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ------------------------------- palette --------------------------------
+   porcelain #F5EEE2   warm gallery-wall background
+   sand      #EADFCB   raised panels / cards
+   husk      #D9C9AB   hairlines, borders
+   ink       #211912   near-black espresso text
+   cocoa     #4A3A2C   muted body text
+   copper    #B4551D   primary accent (the halos)
+   ember     #E08A2C   glow accent (the filament)
+   olive     #6B6A4E   quiet tertiary
+------------------------------------------------------------------------- */
+
+@theme {
+  --color-porcelain: #f5eee2;
+  --color-sand: #eadfcb;
+  --color-husk: #d9c9ab;
+  --color-ink: #211912;
+  --color-cocoa: #4a3a2c;
+  --color-copper: #b4551d;
+  --color-ember: #e08a2c;
+  --color-olive: #6b6a4e;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-playfair);
+  --font-body: var(--font-inter);
+  --font-mono: var(--font-dmmono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--color-porcelain);
+  color: var(--color-ink);
+  color-scheme: light;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+::selection {
+  background: var(--color-copper);
+  color: var(--color-porcelain);
+}
+
+/* Playfair Display, medium weight so big headlines stay sturdy over the
+   WebGL scene instead of going hairline */
+@utility font-display {
+  font-family: var(--font-display);
+  font-weight: 500;
+}
+
+/* Paper grain over everything, including the WebGL canvas */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
